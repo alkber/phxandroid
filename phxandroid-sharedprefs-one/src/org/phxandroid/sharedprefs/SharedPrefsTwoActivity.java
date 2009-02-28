@@ -1,4 +1,4 @@
-package org.phxandroid.sharedprefs.one;
+package org.phxandroid.sharedprefs;
 
 import java.util.Map;
 
@@ -14,9 +14,9 @@ import android.view.MenuItem;
 import android.widget.EditText;
 import android.widget.TextView;
 
-public class SharedPrefsOneActivity extends Activity {
+public class SharedPrefsTwoActivity extends Activity {
     private static final String PREFERENCE_ID = "PhxAndroid";
-    private static final String TAG           = "SharedPrefsOne";
+    public static final String  TAG           = "SharedPrefsTwo";
     public static final int     OPT_LOAD      = 1;
     public static final int     OPT_SAVE      = 2;
     public static final int     OPT_DUMP      = 3;
@@ -27,7 +27,7 @@ public class SharedPrefsOneActivity extends Activity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.main);
+        setContentView(R.layout.main_two);
 
         input = (EditText) findViewById(R.id.edit);
         output = (TextView) findViewById(R.id.out);

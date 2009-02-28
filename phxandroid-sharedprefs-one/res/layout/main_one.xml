@@ -33,7 +33,7 @@
                 android:id="@+id/out"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/welcome" />
+                android:text="@string/welcome_one" />
         </ScrollView>
     
 </RelativeLayout>
