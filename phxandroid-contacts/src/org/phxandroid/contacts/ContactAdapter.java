@@ -127,6 +127,7 @@ public class ContactAdapter extends BaseAdapter implements ListAdapter {
         ContactInfo info = contacts.get(position);
         img.setImageBitmap(info.avatar);
         name.setText(info.name);
+        view.setTag(info);
 
         return view;
     }
