@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	android:orientation="vertical"
+	android:layout_width="fill_parent"
+	android:layout_height="fill_parent"
+	android:background="@drawable/droid_background">
+	<ImageView
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:src="@drawable/phxandroid_round_background"
+		android:layout_alignParentBottom="true"
+		android:layout_alignParentRight="true" />
+	<GridView
+		android:id="@+id/grid"
+		android:padding="5px"
+		android:columnWidth="60px"
+		android:numColumns="auto_fit"
+		android:layout_alignParentTop="true"
+		android:layout_width="fill_parent"
+		android:layout_height="fill_parent" />
+</RelativeLayout>
