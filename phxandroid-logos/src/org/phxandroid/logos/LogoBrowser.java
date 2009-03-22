@@ -2,30 +2,45 @@ package org.phxandroid.logos;
 
 import java.io.IOException;
 
+import org.phxandroid.logos.AssetAdapter.AssetRef;
+
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.content.ComponentName;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.DialogInterface.OnClickListener;
 import android.os.Bundle;
-import android.widget.Gallery;
+import android.view.View;
+import android.widget.AdapterView;
+import android.widget.GridView;
+import android.widget.AdapterView.OnItemClickListener;
 
-public class LogoBrowser extends Activity {
+public class LogoBrowser extends Activity implements OnItemClickListener {
+    private AssetAdapter logos;
+
     /** Called when the activity is first created. */
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.browser);
-
     }
 
     @Override
     protected void onResume() {
         super.onResume();
 
-        Gallery gallery = (Gallery) findViewById(R.id.logo_gallery);
+        GridView grid = (GridView) findViewById(R.id.logos_grid);
         try {
-            AssetAdapter adapter = new AssetAdapter(this);
-            gallery.setAdapter(new AssetAdapter(this));
+            if (logos == null) {
+                logos = AssetAdapter.getInstance();
+                if (!logos.isInitialized()) {
+                    logos.init(this);
+                }
+            }
+
+            grid.setAdapter(logos);
+            grid.setOnItemClickListener(this);
         } catch (IOException e) {
             AlertDialog.Builder dlg = new AlertDialog.Builder(this);
             dlg.setTitle("Asset Load Error");
@@ -38,5 +53,15 @@ public class LogoBrowser extends Activity {
             });
             dlg.show();
         }
+    }
+
+    @Override
+    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+        AssetRef ref = logos.getAssetRef(position);
+
+        Intent intent = new Intent(Intent.ACTION_VIEW);
+        intent.putExtra("name", ref.getName());
+        intent.setComponent(new ComponentName(this, LogoViewer.class));
+        startActivity(intent);
     }
 }
