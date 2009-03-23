@@ -7,17 +7,25 @@ import org.phxandroid.logos.AssetAdapter.AssetRef;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.DialogInterface.OnClickListener;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
+import android.content.pm.PackageManager.NameNotFoundException;
 import android.net.Uri;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.widget.ImageView;
 
 public class LogoViewer extends Activity {
-    public static final Uri URI = Uri.parse("logo://");
-    private static final String TAG = "LogoViewer";
+    public static final Uri     URI       = Uri.parse("logo://");
+    private static final String TAG       = "LogoViewer";
+    private static final int    OPT_EMAIL = 1;
     private AssetAdapter        adapter;
+    private AssetRef            assetRef;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,27 +68,27 @@ public class LogoViewer extends Activity {
                 }
             }
 
-            AssetRef ref;
+            assetRef = null;
 
             if (TextUtils.isDigitsOnly(path)) {
                 // Fetch via position
                 int position = Integer.parseInt(path);
-                ref = adapter.getAssetRef(Integer.parseInt(path));
-                if (ref == null) {
+                assetRef = adapter.getAssetRef(Integer.parseInt(path));
+                if (assetRef == null) {
                     showErrorAndFinish("Logo not found", "Cannot find AssetRef at position: " + position);
                     return;
                 }
             } else {
                 // Fetch via name
-                ref = adapter.getAssetRef(path);
-                if (ref == null) {
+                assetRef = adapter.getAssetRef(path);
+                if (assetRef == null) {
                     showErrorAndFinish("Logo not found", "Cannot find AssetRef for name: " + path);
                     return;
                 }
             }
 
             ImageView img = (ImageView) findViewById(R.id.logo);
-            img.setImageBitmap(ref.getBitmap());
+            img.setImageBitmap(assetRef.getBitmap());
         } catch (IOException e) {
             showErrorAndFinish("IO Error", "Unable to load logo (or logos)." + "\n" + e.getClass().getSimpleName()
                     + "\n" + e.getMessage());
@@ -102,5 +110,57 @@ public class LogoViewer extends Activity {
 
     private void doFinish() {
         finish();
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        super.onCreateOptionsMenu(menu);
+
+        // Create menus (in order)
+        final MenuItem menuEmail = menu.add(0, OPT_EMAIL, 0, "EMail");
+
+        // Establish icons for menus
+        menuEmail.setIcon(android.R.drawable.ic_menu_send);
+
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case OPT_EMAIL:
+                doEmail();
+                break;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    private void doEmail() {
+        String[] mailto = new String[] { "joakim.erdfelt@gmail.com" };
+        String[] mailcc = new String[] { "joakim@erdfelt.com" };
+        String subject = "[phxandroid-logos] Email";
+
+        StringBuffer body = new StringBuffer();
+
+        body.append("Auto generated email body from app\n");
+        try {
+            PackageManager pm = getPackageManager();
+            PackageInfo info = pm.getPackageInfo(getPackageName(), 0);
+            body.append(info.packageName).append(" v").append(info.versionName);
+            body.append(" (").append(info.versionCode).append(")\n");
+        } catch (NameNotFoundException e) {
+            body.append(getPackageName()).append(" (v)\n");
+        }
+
+        body.append("\nSelected Logo: " + assetRef.getName());
+
+        Intent email = new Intent(Intent.ACTION_SEND);
+        email.putExtra(Intent.EXTRA_EMAIL, mailto);
+        email.putExtra(Intent.EXTRA_CC, mailcc);
+        email.putExtra(Intent.EXTRA_SUBJECT, subject);
+        email.putExtra(Intent.EXTRA_TEXT, body.toString());
+        email.setType("text/plain");
+
+        startActivity(Intent.createChooser(email, "PhxAndroidSendEmail"));
     }
 }
