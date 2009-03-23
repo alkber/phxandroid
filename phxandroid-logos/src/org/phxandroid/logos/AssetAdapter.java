@@ -19,6 +19,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 public class AssetAdapter extends BaseAdapter {
+    @SuppressWarnings("unused")
     private static final String TAG      = "AssetAdapter";
     private static AssetAdapter INSTANCE = new AssetAdapter();
 
@@ -53,7 +54,6 @@ public class AssetAdapter extends BaseAdapter {
 
     private List<AssetRef> logos       = new ArrayList<AssetRef>();
     private LayoutInflater inflater;
-    private Context        context;
     private boolean        initialized = false;
 
     public boolean isInitialized() {
@@ -61,7 +61,6 @@ public class AssetAdapter extends BaseAdapter {
     }
 
     public void init(Context context) throws IOException {
-        this.context = context;
         this.inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         initialized = true;
         AssetManager assets = context.getAssets();

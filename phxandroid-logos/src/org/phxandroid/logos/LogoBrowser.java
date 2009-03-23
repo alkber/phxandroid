@@ -6,7 +6,6 @@ import org.phxandroid.logos.AssetAdapter.AssetRef;
 
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.content.ComponentName;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.DialogInterface.OnClickListener;
@@ -18,12 +17,21 @@ import android.widget.AdapterView.OnItemClickListener;
 
 public class LogoBrowser extends Activity implements OnItemClickListener {
     private AssetAdapter logos;
+    private boolean      modeShortcut = false;
 
     /** Called when the activity is first created. */
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.browser);
+
+        Intent intent = getIntent();
+        String action = intent.getAction();
+
+        // If the intent is a request to create a shortcut, we'll trigger the shortcut mode
+        if (Intent.ACTION_CREATE_SHORTCUT.equals(action)) {
+            modeShortcut = true;
+        }
     }
 
     @Override
@@ -59,9 +67,36 @@ public class LogoBrowser extends Activity implements OnItemClickListener {
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         AssetRef ref = logos.getAssetRef(position);
 
+        if (modeShortcut) {
+            // Shortcut selection mode
+            createShortcut(ref);
+            finish();
+        } else {
+            // Normal click during normal operation.
+            launchViewer(ref.getName());
+        }
+    }
+
+    private void createShortcut(AssetRef ref) {
+        // First we create the intent that will be used to Launch the viewer.
+        Intent viewerIntent = new Intent(Intent.ACTION_VIEW);
+        viewerIntent.setClassName(this, LogoViewer.class.getName());
+        viewerIntent.putExtra("name", ref.getName());
+
+        // Then, set up the container intent that is used by the Launcher to setup the icon, name, and intent to launch.
+        Intent intent = new Intent();
+        intent.putExtra(Intent.EXTRA_SHORTCUT_INTENT, viewerIntent);
+        intent.putExtra(Intent.EXTRA_SHORTCUT_NAME, ref.getName() + " Logo");
+        intent.putExtra(Intent.EXTRA_SHORTCUT_ICON, ref.getIcon());
+
+        // Now, return the result to the launcher
+        setResult(RESULT_OK, intent);
+    }
+
+    private void launchViewer(String name) {
         Intent intent = new Intent(Intent.ACTION_VIEW);
-        intent.putExtra("name", ref.getName());
-        intent.setComponent(new ComponentName(this, LogoViewer.class));
+        intent.putExtra("name", name);
+        intent.setClassName(this, LogoViewer.class.getName());
         startActivity(intent);
     }
 }
