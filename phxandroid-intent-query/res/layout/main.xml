@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	android:orientation="vertical"
+	android:layout_width="fill_parent"
+	android:layout_height="fill_parent"
+	android:background="@drawable/droid_background">
+	<ImageView
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:src="@drawable/phxandroid_round_background"
+		android:layout_alignParentBottom="true"
+		android:layout_alignParentRight="true" />
+	<Button
+		android:id="@+id/btnLauncher"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:text="Launcher" />
+	<Button
+		android:id="@+id/btnQuery"
+		android:layout_toRightOf="@id/btnLauncher"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:text="Query" />
+</RelativeLayout>
