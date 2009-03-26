@@ -16,8 +16,9 @@ public final class R {
         public static final int phxandroid_round_background=0x7f020001;
     }
     public static final class id {
+        public static final int btnDumpContacts=0x7f050002;
+        public static final int btnGetContentImages=0x7f050001;
         public static final int btnLauncher=0x7f050000;
-        public static final int btnQuery=0x7f050001;
     }
     public static final class layout {
         public static final int main=0x7f030000;
