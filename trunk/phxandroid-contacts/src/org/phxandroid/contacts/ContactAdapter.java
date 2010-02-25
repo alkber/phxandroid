@@ -96,22 +96,18 @@ public class ContactAdapter extends BaseAdapter implements ListAdapter {
         return BitmapFactory.decodeResource(context.getResources(), drawableId, null);
     }
 
-    @Override
     public int getCount() {
         return contacts.size();
     }
 
-    @Override
     public Object getItem(int position) {
         return contacts.get(position);
     }
 
-    @Override
     public long getItemId(int position) {
         return position;
     }
 
-    @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         View view;
 

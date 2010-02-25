@@ -24,7 +24,6 @@ public class ContactBrowser extends Activity implements OnItemClickListener {
         grid.setOnItemClickListener(this);
     }
 
-    @Override
     public void onItemClick(AdapterView<?> parent, View v, int position, long id) {
         ContactAdapter.ContactInfo info = (ContactInfo) v.getTag();
         Toast.makeText(this, "Clicked on " + info.name, Toast.LENGTH_LONG).show();
