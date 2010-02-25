@@ -63,7 +63,6 @@ public class LogoViewer extends Activity {
         dlg.setTitle(title);
         dlg.setMessage(message);
         dlg.setNegativeButton("Close", new OnClickListener() {
-            @Override
             public void onClick(DialogInterface dialog, int which) {
                 doFinish();
             }

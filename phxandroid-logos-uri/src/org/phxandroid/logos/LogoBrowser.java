@@ -21,7 +21,6 @@ public class LogoBrowser extends Activity {
     private AssetAdapter logos;
 
     class NormalItemClick implements OnItemClickListener {
-        @Override
         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
             AssetRef ref = logos.getAssetRef(position);
             
@@ -32,7 +31,6 @@ public class LogoBrowser extends Activity {
     }
 
     class ShortcutItemClick implements OnItemClickListener {
-        @Override
         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
             AssetRef ref = logos.getAssetRef(position);
 
@@ -54,7 +52,6 @@ public class LogoBrowser extends Activity {
     }
 
     class SelectImageItemClick implements OnItemClickListener {
-        @Override
         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
             AssetRef ref = logos.getAssetRef(position);
 
@@ -119,7 +116,6 @@ public class LogoBrowser extends Activity {
             dlg.setTitle("Asset Load Error");
             dlg.setMessage("Unable to load assets.\n" + e.getClass().getSimpleName() + "\n" + e.getMessage());
             dlg.setNeutralButton("Close", new OnClickListener() {
-                @Override
                 public void onClick(DialogInterface dialog, int which) {
                     /* do nothing */
                 }
