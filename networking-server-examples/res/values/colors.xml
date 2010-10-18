@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<resources>
+    <color
+        name="black">#000000</color>
+    <color
+        name="faded">#888888</color>
+    <color
+        name="button_bar">#dc3a3e</color>
+    <color
+        name="console_bg">#dc6568</color>
+    <color
+        name="console_fg">#000000</color>
+</resources>

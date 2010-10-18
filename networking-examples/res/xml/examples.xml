@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<PreferenceScreen
+    xmlns:android="http://schemas.android.com/apk/res/android">
+    <PreferenceCategory
+        android:title="@string/category_test_server">
+        <EditTextPreference
+            android:key="server.hostname"
+            android:defaultValue="@string/pref_test_server_value"
+            android:dialogTitle="@string/pref_test_server"
+            android:title="@string/pref_test_server_title" />
+    </PreferenceCategory>
+
+    <PreferenceCategory
+        android:title="@string/category_socket_examples">
+        <PreferenceScreen
+            android:key="phxandroid.examples.socket.tcp"
+            android:title="@string/socket_tcp">
+            <intent
+                android:targetPackage="org.phxandroid.examples"
+                android:action="android.intent.action.VIEW"
+                android:targetClass="org.phxandroid.examples.socket.TcpActivity" />
+        </PreferenceScreen>
+        <PreferenceScreen
+            android:key="phxandroid.examples.socket.udp"
+            android:title="@string/socket_udp">
+            <intent
+                android:targetPackage="org.phxandroid.examples"
+                android:action="android.intent.action.VIEW"
+                android:targetClass="org.phxandroid.examples.socket.UdpActivity" />
+        </PreferenceScreen>
+    </PreferenceCategory>
+
+    <PreferenceCategory
+        android:title="@string/category_httpclient_examples">
+        <PreferenceScreen
+            android:title="@string/http_get">
+            <intent
+                android:targetPackage="org.phxandroid.examples"
+                android:action="android.intent.action.VIEW"
+                android:targetClass="org.phxandroid.examples.http.HttpGetActivity" />
+        </PreferenceScreen>
+    </PreferenceCategory>
+</PreferenceScreen>
