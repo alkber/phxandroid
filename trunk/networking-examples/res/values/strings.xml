@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Networking Examples</string>
+    
+    <string name="category_test_server">Test Server</string>
+    <string name="pref_test_server_value">monolyth.local</string>
+    <string name="pref_test_server">Test Server</string>
+    <string name="pref_test_server_title">Test Server</string>
+    
+    <string name="category_socket_examples">Socket Examples</string>
+    <string name="socket_tcp">TCP Socket</string>
+    <string name="socket_udp">UDP Socket</string>
+    
+    <string name="category_httpclient_examples">HttpClient Examples</string>
+    <string name="http_get">HTTP GET</string>
+</resources>
