@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.InetSocketAddress;
 import java.net.Socket;
-import java.net.SocketAddress;
 import java.net.UnknownHostException;
 
 import org.phxandroid.examples.AbstractTestConsoleActivity;
@@ -15,6 +14,11 @@ import android.view.View;
 
 public class TcpActivity extends AbstractTestConsoleActivity {
     @Override
+    protected String getDefaultDestination() {
+        return "10.0.2.2:21835";
+    }
+
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
@@ -23,24 +27,23 @@ public class TcpActivity extends AbstractTestConsoleActivity {
 
     @Override
     protected void doTest(View v) {
-        // String desthost = getNetApplication().getServerHostname();
-        String desthost = "10.0.2.2";
-        int port = 21835; // The Clemens TCP Server from networking-server-examples
-        SocketAddress addr = null;
+        InetSocketAddress addr = getDestinationSocketAddress();
+        if (addr == null) {
+            return;
+        }
         Socket socket = null;
         InputStream stream = null;
 
         try {
-            addr = new InetSocketAddress(desthost, port);
             socket = new Socket();
             socket.setSoTimeout(2000);
             socket.connect(addr);
             stream = socket.getInputStream();
             copyToConsole(stream);
         } catch (UnknownHostException e) {
-            printf(e, "Unable to resolve host: %s%n", desthost);
+            printf(e, "Unable to resolve host: %s%n", addr);
         } catch (IOException e) {
-            printf(e, "Unable to initiate Socket to host: %s%n", desthost);
+            printf(e, "Unable to initiate Socket to host: %s%n", addr);
         } finally {
             IOUtil.close(stream);
             close(socket);

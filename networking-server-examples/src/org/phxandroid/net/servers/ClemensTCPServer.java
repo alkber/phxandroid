@@ -18,7 +18,6 @@ import android.os.AsyncTask;
  */
 public class ClemensTCPServer {
     private static final String NAME = ClemensTCPServer.class.getSimpleName();
-    private ServerSocket        server;
     private static final int    port = 1835;
     private List<String>        quotes;
     private Console             console;
@@ -34,6 +33,26 @@ public class ClemensTCPServer {
     }
 
     class ResponseTask extends AsyncTask<Void, String, Void> {
+        private ServerSocket server;
+        
+        @Override
+        protected void onPreExecute() {
+            try {
+                server = new ServerSocket(port);
+                SocketAddress addr = server.getLocalSocketAddress();
+                String localaddr = "0.0.0.0";
+                if ((addr != null) && (addr instanceof InetSocketAddress)) {
+                    InetSocketAddress iaddr = (InetSocketAddress) addr;
+                    localaddr = iaddr.getAddress().getHostAddress();
+                }
+
+                progressf("Starting %s on %s port %d%n", NAME, localaddr, server.getLocalPort());
+            } catch (IOException e) {
+                progressf("Error initializing server %d%n", NAME);
+                publishProgress("\n" + ExceptionUtils.asString(e) + "\n");
+            }
+        }
+
         @Override
         protected Void doInBackground(Void... params) {
             Socket sock;
@@ -45,7 +64,7 @@ public class ClemensTCPServer {
                 try {
                     sock = server.accept();
                     remote = sock.getRemoteSocketAddress();
-                    progressf("Accepted %s TCP Socket from %s%n", NAME, getAddrId(remote));
+                    progressf("Accepted %s TCP Socket from %s%n", NAME, AddrUtil.asId(remote));
                     size = sendRandomQuote(sock);
                     progressf("(sent %d bytes)%n", size);
                 } catch (IOException e) {
@@ -62,6 +81,13 @@ public class ClemensTCPServer {
         @Override
         protected void onPostExecute(Void result) {
             console.printf("%s Shut down%n", NAME);
+            if (server != null) {
+                try {
+                    server.close();
+                } catch (IOException ignore) {
+                    /* ignore */
+                }
+            }
         }
 
         private int sendRandomQuote(Socket sock) throws IOException {
@@ -99,15 +125,6 @@ public class ClemensTCPServer {
             }
         }
 
-        private String getAddrId(SocketAddress addr) {
-            if (addr instanceof InetSocketAddress) {
-                InetSocketAddress iaddr = (InetSocketAddress) addr;
-                return iaddr.getAddress().getHostAddress() + ":" + iaddr.getPort();
-            }
-
-            return addr.toString();
-        }
-
         private void progressf(String format, Object... args) {
             publishProgress(String.format(format, args));
         }
@@ -123,14 +140,6 @@ public class ClemensTCPServer {
     public void start() throws IOException {
         if (task == null) {
             task = new ResponseTask();
-            server = new ServerSocket(port);
-            SocketAddress addr = server.getLocalSocketAddress();
-            String localaddr = "0.0.0.0";
-            if ((addr != null) && (addr instanceof InetSocketAddress)) {
-                InetSocketAddress iaddr = (InetSocketAddress) addr;
-                localaddr = iaddr.getAddress().getHostAddress();
-            }
-            console.printf("Starting %s on %s port %d%n", NAME, localaddr, server.getLocalPort());
             this.task.execute();
         }
     }
@@ -139,9 +148,6 @@ public class ClemensTCPServer {
         if (this.task != null) {
             this.task.cancel(true);
 
-            if (server != null) {
-                server.close();
-            }
         }
     }
 }
