@@ -3,15 +3,6 @@
 <PreferenceScreen
     xmlns:android="http://schemas.android.com/apk/res/android">
     <PreferenceCategory
-        android:title="@string/category_test_server">
-        <EditTextPreference
-            android:key="server.hostname"
-            android:defaultValue="@string/pref_test_server_value"
-            android:dialogTitle="@string/pref_test_server"
-            android:title="@string/pref_test_server_title" />
-    </PreferenceCategory>
-
-    <PreferenceCategory
         android:title="@string/category_socket_examples">
         <PreferenceScreen
             android:key="phxandroid.examples.socket.tcp"
