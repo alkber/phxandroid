@@ -27,6 +27,9 @@
         <activity
             android:label="HTTP GET Example"
             android:name=".http.HttpGetActivity" />
+        <activity
+            android:label="HTTP GET (w/GZip) Example"
+            android:name=".http.HttpGetGzippedActivity" />
     </application>
     <uses-sdk
         android:minSdkVersion="7" />
