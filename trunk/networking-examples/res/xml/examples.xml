@@ -31,5 +31,12 @@
                 android:action="android.intent.action.VIEW"
                 android:targetClass="org.phxandroid.examples.http.HttpGetActivity" />
         </PreferenceScreen>
+        <PreferenceScreen
+            android:title="@string/http_get_gzip">
+            <intent
+                android:targetPackage="org.phxandroid.examples"
+                android:action="android.intent.action.VIEW"
+                android:targetClass="org.phxandroid.examples.http.HttpGetGzippedActivity" />
+        </PreferenceScreen>
     </PreferenceCategory>
 </PreferenceScreen>

@@ -15,7 +15,7 @@ import org.json.JSONObject;
 
 import android.view.View;
 
-public class HttpGetActivity extends AbstractHttpActivity {
+public class HttpGetGzippedActivity extends AbstractHttpActivity {
 
     @Override
     protected void doTest(View v) {

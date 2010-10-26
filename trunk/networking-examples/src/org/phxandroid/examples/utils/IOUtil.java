@@ -3,6 +3,7 @@ package org.phxandroid.examples.utils;
 import java.io.Closeable;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.Reader;
 
 import android.widget.TextView;
 
@@ -46,6 +47,24 @@ public class IOUtil {
             count += n;
         }
         return count;
+    }
+
+    /**
+     * Copy a reader to a String and return it.
+     * 
+     * @param reader
+     *            the reader to read from
+     * @return the string representing the text from the reader.
+     * @throws IOException
+     */
+    public static String readAsString(Reader reader) throws IOException {
+        StringBuilder str = new StringBuilder();
+        char buf[] = new char[BUFSIZE];
+        int n = 0;
+        while ((n = reader.read(buf)) != (-1)) {
+            str.append(buf, 0, n);
+        }
+        return str.toString();
     }
 
 }

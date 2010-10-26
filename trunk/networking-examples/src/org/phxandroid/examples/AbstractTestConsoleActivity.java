@@ -24,7 +24,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 public abstract class AbstractTestConsoleActivity extends Activity {
-    private TextView console;
+    protected TextView console;
     private EditText destination;
 
     @Override
@@ -91,6 +91,10 @@ public abstract class AbstractTestConsoleActivity extends Activity {
 
     protected void doClearConsole(View v) {
         console.setText("");
+    }
+
+    protected String getDestinationText() {
+        return destination.getText().toString();
     }
 
     public InetSocketAddress getDestinationSocketAddress() {

@@ -10,4 +10,5 @@
     
     <string name="category_httpclient_examples">HttpClient Examples</string>
     <string name="http_get">HTTP GET</string>
+    <string name="http_get_gzip">HTTP GET (w/GZip)</string>
 </resources>
