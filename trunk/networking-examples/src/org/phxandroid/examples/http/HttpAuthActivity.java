@@ -2,6 +2,7 @@ package org.phxandroid.examples.http;
 
 import java.io.IOException;
 import java.net.URI;
+import java.util.List;
 
 import org.apache.http.Header;
 import org.apache.http.HttpResponse;
@@ -85,9 +86,15 @@ public class HttpAuthActivity extends AbstractHttpActivity {
 		@Override
 		protected void onPostExecute(HtmlPage page) {
 			if (page == null) {
-				// TODO: show error.
+				printf("No HtmlPage Downloaded.%n");
+				return;
 			}
 			printf("Got htmlpage: %s%n", page);
+			List<String> wizlinks = page.getLinksRegex("^wizard.*\\.mp3$");
+			printf("Found %d Wizard link(s):%n", wizlinks.size());
+			for (String link : wizlinks) {
+				printf(" - %s%n", link);
+			}
 		}
 
 		@Override
