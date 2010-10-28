@@ -3,6 +3,9 @@
     <string name="app_name">Networking Examples</string>
 
     <string name="destination_label">Destination:</string>    
+    <string name="realm">Auth Realm</string>
+    <string name="username">User Name:</string>
+    <string name="password">Password:</string>
     
     <string name="category_socket_examples">Socket Examples</string>
     <string name="socket_tcp">TCP Socket</string>
