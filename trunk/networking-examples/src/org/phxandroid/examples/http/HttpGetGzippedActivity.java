@@ -1,8 +1,13 @@
 package org.phxandroid.examples.http;
 
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.net.URI;
+import java.util.zip.GZIPInputStream;
 
+import org.apache.http.Header;
+import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
 import org.apache.http.StatusLine;
@@ -12,6 +17,7 @@ import org.apache.http.impl.client.DefaultHttpClient;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.phxandroid.examples.utils.IOUtil;
 
 import android.view.View;
 
@@ -27,6 +33,7 @@ public class HttpGetGzippedActivity extends AbstractHttpActivity {
         try {
             HttpClient client = new DefaultHttpClient();
             HttpGet httpget = new HttpGet(uri);
+            httpget.setHeader("Accept-Encoding", "gzip");
             setUserAgent(httpget);
 
             HttpResponse response = client.execute(httpget);
@@ -51,6 +58,54 @@ public class HttpGetGzippedActivity extends AbstractHttpActivity {
         } catch (JSONException e) {
             printf(e, "Unable to parse JSON: %s%n", e.getMessage());
         }
+    }
+    
+    protected JSONArray readJSONArray(HttpResponse response) throws IOException, JSONException {
+        HttpEntity entity = response.getEntity();
+        if (entity == null) {
+            throw new JSONException("No response content found.");
+        }
+    
+        String content = readContentAsString(entity);
+        return new JSONArray(content);
+    }
+
+    protected String readContentAsString(HttpEntity entity) throws IOException {
+        InputStream in = null;
+        InputStreamReader reader = null;
+        try {
+            in = getContentAwareInputStream(entity);
+            reader = new InputStreamReader(in);
+            return IOUtil.readAsString(reader);
+        } finally {
+            IOUtil.close(reader);
+            IOUtil.close(in);
+        }
+    }
+
+    private InputStream getContentAwareInputStream(HttpEntity entity) throws IOException {
+        InputStream responseStream = entity.getContent();
+        if(responseStream == null) {
+            // No content.
+            return responseStream;
+        }
+        // Determine if we have GZipped content.
+        Header header = entity.getContentEncoding();
+        if(header == null) {
+            // No content encoding header.
+            return responseStream;
+        }
+        String encoding = header.getValue();
+        if(encoding == null) {
+            // No content encoding value.
+            return responseStream;
+        }
+        if(encoding.contains("gzip")) {
+            // Content is gzipped - wrap with ungzip stream
+            return new GZIPInputStream(responseStream);
+        }
+        // Has content encoding header, with value, but we don't care at this point.
+        return responseStream;
     }
 
     @Override

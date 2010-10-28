@@ -1,8 +1,11 @@
 package org.phxandroid.examples.http;
 
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.net.URI;
 
+import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
 import org.apache.http.StatusLine;
@@ -12,6 +15,7 @@ import org.apache.http.impl.client.DefaultHttpClient;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.phxandroid.examples.utils.IOUtil;
 
 import android.view.View;
 
@@ -50,6 +54,29 @@ public class HttpGetActivity extends AbstractHttpActivity {
             printf(e, "Unable to HTTP GET: %s%n", uri);
         } catch (JSONException e) {
             printf(e, "Unable to parse JSON: %s%n", e.getMessage());
+        }
+    }
+    
+    protected JSONArray readJSONArray(HttpResponse response) throws IOException, JSONException {
+        HttpEntity entity = response.getEntity();
+        if (entity == null) {
+            throw new JSONException("No response content found.");
+        }
+    
+        String content = readContentAsString(entity);
+        return new JSONArray(content);
+    }
+
+    protected String readContentAsString(HttpEntity entity) throws IOException {
+        InputStream in = null;
+        InputStreamReader reader = null;
+        try {
+            in = entity.getContent();
+            reader = new InputStreamReader(in);
+            return IOUtil.readAsString(reader);
+        } finally {
+            IOUtil.close(reader);
+            IOUtil.close(in);
         }
     }
 
