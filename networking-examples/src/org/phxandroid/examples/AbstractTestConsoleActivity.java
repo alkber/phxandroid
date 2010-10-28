@@ -26,12 +26,16 @@ import android.widget.TextView;
 public abstract class AbstractTestConsoleActivity extends Activity {
     protected TextView console;
     private EditText destination;
+    
+    protected int getLayoutId() {
+        return R.layout.testconsole;
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        setContentView(R.layout.testconsole);
+        setContentView(getLayoutId());
 
         Button btnTest = (Button) findViewById(R.id.btnTest);
         Button btnClear = (Button) findViewById(R.id.btnClear);

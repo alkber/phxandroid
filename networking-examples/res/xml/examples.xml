@@ -38,5 +38,40 @@
                 android:action="android.intent.action.VIEW"
                 android:targetClass="org.phxandroid.examples.http.HttpGetGzippedActivity" />
         </PreferenceScreen>
+        <PreferenceScreen
+            android:title="@string/http_post">
+            <intent
+                android:targetPackage="org.phxandroid.examples"
+                android:action="android.intent.action.VIEW"
+                android:targetClass="org.phxandroid.examples.http.HttpPostActivity" />
+        </PreferenceScreen>
+        <PreferenceScreen
+            android:title="@string/http_post_task">
+            <intent
+                android:targetPackage="org.phxandroid.examples"
+                android:action="android.intent.action.VIEW"
+                android:targetClass="org.phxandroid.examples.http.HttpPostTaskActivity" />
+        </PreferenceScreen>
+        <PreferenceScreen
+            android:title="@string/http_put">
+            <intent
+                android:targetPackage="org.phxandroid.examples"
+                android:action="android.intent.action.VIEW"
+                android:targetClass="org.phxandroid.examples.http.HttpPutActivty" />
+        </PreferenceScreen>
+        <PreferenceScreen
+            android:title="@string/http_delete">
+            <intent
+                android:targetPackage="org.phxandroid.examples"
+                android:action="android.intent.action.VIEW"
+                android:targetClass="org.phxandroid.examples.http.HttpDeleteActivity" />
+        </PreferenceScreen>
+        <PreferenceScreen
+            android:title="@string/http_auth">
+            <intent
+                android:targetPackage="org.phxandroid.examples"
+                android:action="android.intent.action.VIEW"
+                android:targetClass="org.phxandroid.examples.http.HttpAuthActivity" />
+        </PreferenceScreen>
     </PreferenceCategory>
 </PreferenceScreen>

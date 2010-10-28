@@ -30,6 +30,21 @@
         <activity
             android:label="HTTP GET (w/GZip) Example"
             android:name=".http.HttpGetGzippedActivity" />
+        <activity
+            android:label="HTTP POST"
+            android:name=".http.HttpPostActivity" />
+        <activity
+            android:label="HTTP POST (Task)"
+            android:name=".http.HttpPostTaskActivity" />
+        <activity
+            android:label="HTTP PUT"
+            android:name=".http.HttpPutActivity" />
+        <activity
+            android:label="HTTP DELETE"
+            android:name=".http.HttpDeleteActivity" />
+        <activity
+            android:label="HTTP Auth"
+            android:name=".http.HttpAuthActivity" />
     </application>
     <uses-sdk
         android:minSdkVersion="7" />
