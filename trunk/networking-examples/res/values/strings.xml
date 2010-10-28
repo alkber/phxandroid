@@ -11,4 +11,9 @@
     <string name="category_httpclient_examples">HttpClient Examples</string>
     <string name="http_get">HTTP GET</string>
     <string name="http_get_gzip">HTTP GET (w/GZip)</string>
+    <string name="http_post">HTTP POST</string>
+    <string name="http_post_task">HTTP POST (Task)</string>
+    <string name="http_put">HTTP PUT</string>
+    <string name="http_delete">HTTP DELETE</string>
+    <string name="http_auth">HTTP Auth</string>
 </resources>
