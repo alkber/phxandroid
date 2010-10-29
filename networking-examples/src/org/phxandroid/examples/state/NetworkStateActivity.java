@@ -12,19 +12,6 @@ import android.view.View;
 
 public class NetworkStateActivity extends AbstractTestConsoleActivity {
 	@Override
-	protected String getDefaultDestination() {
-		return "";
-	}
-
-	@Override
-	protected void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-		hideDestination();
-
-		printf("Welcome to Network State Example%n");
-	}
-
-	@Override
 	protected void doTest(View v) {
 		ConnectivityManager connMgr = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
 		if (connMgr == null) {
@@ -41,6 +28,18 @@ public class NetworkStateActivity extends AbstractTestConsoleActivity {
 		printf("## isNetworkAvailable = %s%n", isNetworkAvailable(connMgr));
 		printf("## isOnWifi = %s%n", isOnWifi(connMgr));
 		printf("## isOnMobileWithoutRoaming = %s%n", isOnMobileWithoutRoaming(connMgr, telefony));
+	}
+
+	@Override
+	protected String getDefaultDestination() {
+		return "";
+	}
+
+	private String getNetworkInfoState(NetworkInfo info) {
+		if (info == null) {
+			return "UNKNOWN";
+		}
+		return info.getState().name();
 	}
 
 	private boolean isNetworkAvailable(ConnectivityManager connMgr) {
@@ -87,14 +86,23 @@ public class NetworkStateActivity extends AbstractTestConsoleActivity {
 		return ((info.getType() == ConnectivityManager.TYPE_WIFI) && (info.getState() == State.CONNECTED));
 	}
 
-	private void printTelefonyState(TelephonyManager telefony) {
-		if (telefony == null) {
-			printf("Couldn't get TelephonyManager%n");
+	@Override
+	protected void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		hideDestination();
+
+		printf("Welcome to Network State Example%n");
+	}
+
+	private void print(NetworkInfo info) {
+		if (info == null) {
+			printf("NetworkInfo: <null>%n");
 			return;
 		}
 
-		printf("TelephonyManager:%n");
-		printf("  .isNetworkRoaming: %s%n", Boolean.valueOf(telefony.isNetworkRoaming()));
+		printf("NetworkInfo[%d]: %s%n", info.getType(), info.getTypeName());
+		printf("   .subtype[%s]: %s%n", info.getSubtype(), info.getSubtypeName());
+		printf("   .state: %s%n", getNetworkInfoState(info));
 	}
 
 	private void printActiveNetworkInfo(ConnectivityManager connMgr) {
@@ -121,21 +129,13 @@ public class NetworkStateActivity extends AbstractTestConsoleActivity {
 		}
 	}
 
-	private void print(NetworkInfo info) {
-		if (info == null) {
-			printf("NetworkInfo: <null>%n");
+	private void printTelefonyState(TelephonyManager telefony) {
+		if (telefony == null) {
+			printf("Couldn't get TelephonyManager%n");
 			return;
 		}
 
-		printf("NetworkInfo[%d]: %s%n", info.getType(), info.getTypeName());
-		printf("   .subtype[%s]: %s%n", info.getSubtype(), info.getSubtypeName());
-		printf("   .state: %s%n", getNetworkInfoState(info));
-	}
-
-	private String getNetworkInfoState(NetworkInfo info) {
-		if (info == null) {
-			return "UNKNOWN";
-		}
-		return info.getState().name();
+		printf("TelephonyManager:%n");
+		printf("  .isNetworkRoaming: %s%n", Boolean.valueOf(telefony.isNetworkRoaming()));
 	}
 }
