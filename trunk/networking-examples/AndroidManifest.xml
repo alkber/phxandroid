@@ -55,6 +55,9 @@
         <activity
             android:label="HTTP Auth"
             android:name=".http.HttpAuthActivity" />
+        <activity
+            android:label="HTTPS (SSL)"
+            android:name=".http.HttpsActivity" />
     </application>
     <uses-sdk
         android:minSdkVersion="7" />

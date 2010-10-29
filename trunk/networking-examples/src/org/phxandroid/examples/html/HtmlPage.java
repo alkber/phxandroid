@@ -14,6 +14,7 @@ import org.phxandroid.examples.utils.IOUtil;
 
 public class HtmlPage {
 	private List<String> links = new ArrayList<String>();
+	private String title;
 
 	public HtmlPage(HttpEntity entity) throws IOException {
 		InputStream in = null;
@@ -24,11 +25,16 @@ public class HtmlPage {
 			reader = new InputStreamReader(in);
 			buf = new BufferedReader(reader);
 
+			Pattern titlepat = Pattern.compile("<title>([^<]*)</title>");
 			Pattern linkpat = Pattern.compile("href=\"([^\"]*)\"");
 			Matcher mat;
 
 			String line, link;
 			while ((line = buf.readLine()) != null) {
+				mat = titlepat.matcher(line);
+				if (mat.find()) {
+					title = mat.group(1);
+				}
 				mat = linkpat.matcher(line);
 				if (mat.find()) {
 					link = mat.group(1);
@@ -41,7 +47,10 @@ public class HtmlPage {
 			IOUtil.close(in);
 		}
 	}
-	
+
+	public String getTitle() {
+		return title;
+	}
 
 	@Override
 	public String toString() {
