@@ -61,6 +61,16 @@
         <activity
             android:label="HTTPS (SSL)"
             android:name=".http.HttpsActivity" />
+        <receiver
+            android:name=".state.NetworkStateReceiver">
+            <intent-filter>
+                <action
+                    android:name="android.intent.action.BOOT_COMPLETED" />
+                <action
+                    android:name="android.net.conn.CONNECTIVITY_CHANGE" />
+            </intent-filter>
+        </receiver>
+            
     </application>
     <uses-sdk
         android:minSdkVersion="7" />
