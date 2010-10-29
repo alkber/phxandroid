@@ -35,6 +35,9 @@
             android:label="UDP Socket Example"
             android:name=".socket.UdpActivity" />
         <activity
+            android:label="Net State Example"
+            android:name=".state.NetworkStateActivity" />
+        <activity
             android:label="HTTP GET Example"
             android:name=".http.HttpGetActivity" />
         <activity

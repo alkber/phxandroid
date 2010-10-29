@@ -11,6 +11,9 @@
     <string name="socket_tcp">TCP Socket</string>
     <string name="socket_udp">UDP Socket</string>
     
+    <string name="category_state_examples">Network State Examples</string>
+    <string name="net_state">Network State</string>
+    
     <string name="category_httpclient_examples">HttpClient Examples</string>
     <string name="http_get">HTTP GET</string>
     <string name="http_get_gzip">HTTP GET (w/GZip)</string>

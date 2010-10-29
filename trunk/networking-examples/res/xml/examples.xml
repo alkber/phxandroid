@@ -21,6 +21,17 @@
                 android:targetClass="org.phxandroid.examples.socket.UdpActivity" />
         </PreferenceScreen>
     </PreferenceCategory>
+    
+    <PreferenceCategory
+    	android:title="@string/category_state_examples">
+        <PreferenceScreen
+            android:title="@string/net_state">
+            <intent
+                android:targetPackage="org.phxandroid.examples"
+                android:action="android.intent.action.VIEW"
+                android:targetClass="org.phxandroid.examples.state.NetworkStateActivity" />
+        </PreferenceScreen>
+    </PreferenceCategory>
 
     <PreferenceCategory
         android:title="@string/category_httpclient_examples">
@@ -52,6 +63,7 @@
                 android:action="android.intent.action.VIEW"
                 android:targetClass="org.phxandroid.examples.http.HttpPostTaskActivity" />
         </PreferenceScreen>
+        <!-- 
         <PreferenceScreen
             android:title="@string/http_put">
             <intent
@@ -66,6 +78,7 @@
                 android:action="android.intent.action.VIEW"
                 android:targetClass="org.phxandroid.examples.http.HttpDeleteActivity" />
         </PreferenceScreen>
+         -->
         <PreferenceScreen
             android:title="@string/http_auth">
             <intent

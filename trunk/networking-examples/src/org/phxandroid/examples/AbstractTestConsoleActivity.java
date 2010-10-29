@@ -152,4 +152,15 @@ public abstract class AbstractTestConsoleActivity extends Activity {
         long count = IOUtil.copy(stream, console);
         printHtml("<p><b>(Read %,d bytes from stream)</b></p>", count);
     }
+    
+    protected void hideWidget(int resourceId) {
+    	View view = findViewById(resourceId);
+    	if(view != null) {
+    		view.setVisibility(View.GONE);
+    	}
+    }
+
+	protected void hideDestination() {
+		hideWidget(R.id.destinationView);
+	}
 }
