@@ -38,7 +38,6 @@ public class HttpAuthActivity extends AbstractHttpActivity {
 		protected HtmlPage doInBackground(URI... uris) {
 			URI uri = uris[0];
 			DefaultHttpClient client = new DefaultHttpClient();
-			// client.addRequestInterceptor(CredentialsActivity.createInterceptor());
 
 			try {
 				long startNS = System.nanoTime();

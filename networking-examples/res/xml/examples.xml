@@ -73,5 +73,12 @@
                 android:action="android.intent.action.VIEW"
                 android:targetClass="org.phxandroid.examples.http.HttpAuthActivity" />
         </PreferenceScreen>
+        <PreferenceScreen
+            android:title="@string/https_ssl">
+            <intent
+                android:targetPackage="org.phxandroid.examples"
+                android:action="android.intent.action.VIEW"
+                android:targetClass="org.phxandroid.examples.http.HttpsActivity" />
+        </PreferenceScreen>
     </PreferenceCategory>
 </PreferenceScreen>

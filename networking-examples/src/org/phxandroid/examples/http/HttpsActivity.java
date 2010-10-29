@@ -1,87 +1,129 @@
 package org.phxandroid.examples.http;
 
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.net.URI;
 
-import org.apache.http.HttpEntity;
+import org.apache.http.Header;
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
+import org.apache.http.HttpVersion;
 import org.apache.http.StatusLine;
-import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
+import org.apache.http.conn.ClientConnectionManager;
+import org.apache.http.conn.params.ConnManagerParams;
+import org.apache.http.conn.scheme.PlainSocketFactory;
+import org.apache.http.conn.scheme.Scheme;
+import org.apache.http.conn.scheme.SchemeRegistry;
 import org.apache.http.impl.client.DefaultHttpClient;
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-import org.phxandroid.examples.utils.IOUtil;
+import org.apache.http.impl.conn.tsccm.ThreadSafeClientConnManager;
+import org.apache.http.params.BasicHttpParams;
+import org.apache.http.params.HttpConnectionParams;
+import org.apache.http.params.HttpParams;
+import org.apache.http.params.HttpProtocolParams;
+import org.apache.http.protocol.HTTP;
+import org.phxandroid.examples.html.HtmlPage;
+import org.phxandroid.examples.ssl.PermissiveSSLSocketFactory;
+import org.phxandroid.examples.utils.ErrorUtil;
 
+import android.os.AsyncTask;
 import android.view.View;
 
 public class HttpsActivity extends AbstractHttpActivity {
+	class GetResponse extends AsyncTask<URI, String, HttpResponse> {
+		@Override
+		protected HttpResponse doInBackground(URI... uris) {
+			URI uri = uris[0];
 
-    @Override
-    protected void doTest(View v) {
-        URI uri = getDestinationURI();
-        if (uri == null) {
-            return;
-        }
+			try {
+				HttpParams parameters = new BasicHttpParams();
+				HttpProtocolParams.setVersion(parameters, HttpVersion.HTTP_1_1);
+				HttpProtocolParams.setContentCharset(parameters, HTTP.UTF_8);
+				// some webservers have problems with "expect: continue" enabled
+				HttpProtocolParams.setUseExpectContinue(parameters, false); 
+				ConnManagerParams.setMaxTotalConnections(parameters, 2);
+				HttpConnectionParams.setConnectionTimeout(parameters, 1000);
+				HttpConnectionParams.setSoTimeout(parameters, 1000);
 
-        try {
-            HttpClient client = new DefaultHttpClient();
-            HttpGet httpget = new HttpGet(uri);
-            setUserAgent(httpget);
+				SchemeRegistry schReg = new SchemeRegistry();
+				schReg.register(new Scheme("http", PlainSocketFactory.getSocketFactory(), 80));
+				schReg.register(new Scheme("https", PermissiveSSLSocketFactory.getSocketFactory(), 443));
 
-            HttpResponse response = client.execute(httpget);
-            StatusLine statusline = response.getStatusLine();
+				ClientConnectionManager conMgr = new ThreadSafeClientConnManager(parameters, schReg);
 
-            if (statusline.getStatusCode() != HttpStatus.SC_OK) {
-                printf("Failed HTTP GET: %d %s%n", statusline.getStatusCode(), statusline.getReasonPhrase());
-                return;
-            }
+				DefaultHttpClient client = new DefaultHttpClient(conMgr, parameters);
 
-            printf("Content Length: %,d bytes%n", response.getEntity().getContentLength());
-            JSONArray json = readJSONArray(response);
-            int updateCount = json.length();
-            printf("JSON.keys.size = %,d%n", updateCount);
-            int maxCount = Math.min(json.length(), 5);
-            for(int i=0; i<maxCount; i++) {
-                JSONObject update = json.getJSONObject(i);
-                printf("Update %d: %s%n", i, update.getString("text"));
-            }
-        } catch (IOException e) {
-            printf(e, "Unable to HTTP GET: %s%n", uri);
-        } catch (JSONException e) {
-            printf(e, "Unable to parse JSON: %s%n", e.getMessage());
-        }
-    }
-    
-    protected JSONArray readJSONArray(HttpResponse response) throws IOException, JSONException {
-        HttpEntity entity = response.getEntity();
-        if (entity == null) {
-            throw new JSONException("No response content found.");
-        }
-    
-        String content = readContentAsString(entity);
-        return new JSONArray(content);
-    }
+				progressf("Initiating HTTP GET to %s%n", uri);
 
-    protected String readContentAsString(HttpEntity entity) throws IOException {
-        InputStream in = null;
-        InputStreamReader reader = null;
-        try {
-            in = entity.getContent();
-            reader = new InputStreamReader(in);
-            return IOUtil.readAsString(reader);
-        } finally {
-            IOUtil.close(reader);
-            IOUtil.close(in);
-        }
-    }
+				long startNS = System.nanoTime();
+				HttpGet httpget = new HttpGet(uri);
+				setUserAgent(httpget);
 
-    @Override
-    protected String getDefaultDestination() {
-        return "http://api.twitter.com/1/statuses/user_timeline.json?screen_name=IAM_SHAKESPEARE";
-    }
+				HttpResponse response = client.execute(httpget);
+				StatusLine statusline = response.getStatusLine();
+
+				long endNS = System.nanoTime();
+				progressf("Got response in %,d nanoseconds%n", (endNS - startNS));
+
+				if (statusline.getStatusCode() != HttpStatus.SC_OK) {
+					progressf("Failed HTTPS GET: %d %s%n", statusline.getStatusCode(), statusline.getReasonPhrase());
+					return null;
+				}
+
+				progressf("Content Length: %,d bytes%n", response.getEntity().getContentLength());
+				return response;
+			} catch (IOException e) {
+				progressf(e, "Unable to HTTPS GET: %s%n", uri);
+			}
+			return null;
+		}
+
+		private void progressf(String format, Object... args) {
+			publishProgress(String.format(format, args));
+		}
+
+		private void progressf(Throwable t, String format, Object... args) {
+			publishProgress(ErrorUtil.getStackTraceAsString(t));
+			publishProgress(String.format(format, args));
+		}
+
+		@Override
+		protected void onPostExecute(HttpResponse response) {
+			if (response == null) {
+				return;
+			}
+			printf("%nGot Response:%n");
+			for (Header header : response.getAllHeaders()) {
+				printf("%s: %s%n", header.getName(), header.getValue());
+			}
+			try {
+				HtmlPage page = new HtmlPage(response.getEntity());
+				printf("%nHtml Page:%n");
+				printf("<title>%s</title>%n", page.getTitle());
+			} catch (IOException e) {
+				printf("Unable to parse html page: %s%n", e.getMessage());
+			}
+		}
+
+		@Override
+		protected void onProgressUpdate(String... lines) {
+			for (String line : lines) {
+				printf(line);
+			}
+		}
+	}
+
+	@Override
+	protected void doTest(View v) {
+		URI uri = getDestinationURI();
+		if (uri == null) {
+			return;
+		}
+
+		new GetResponse().execute(uri);
+	}
+
+	@Override
+	protected String getDefaultDestination() {
+		return "https://mail.erdfelt.com/";
+	}
 }
